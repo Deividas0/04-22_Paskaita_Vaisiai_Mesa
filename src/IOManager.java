@@ -1,28 +1,38 @@
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
 public class IOManager {
-    Produktas produktas = new Produktas();
+    //Produktas produktas = new Produktas();
     CSVImportExportImpl CSVimpl = new CSVImportExportImpl();
     public String path = "C:/MokymoDarbai/Produktai.txt";
-    BufferedWriter bw = new BufferedWriter(new FileWriter(path));
-    BufferedReader br = new BufferedReader(new FileReader(path));
+    BufferedWriter bw;
+    BufferedReader br;
+    List<Produktas> krepselis = new ArrayList<>();
+    List<Produktas> spargalke = new ArrayList<>();
 
     public IOManager() throws IOException {
     }
 
 
-    public void CSVImportExportImpl(List<Produktas> produktaiList) {
+    public void CSVImportExportImpl(List<Produktas> produktaiList) throws IOException {
         Scanner sc = new Scanner(System.in);
+        bw = new BufferedWriter(new FileWriter(path, true));
+        br = new BufferedReader(new FileReader(path));
         System.out.println("Pasirinkite veiksmą: ");
         System.out.println("1. Pridėti produktą prie sąrašo. ");
         System.out.println("2. Pašalinti produktą iš sąrašo. ");
         System.out.println("3. Patikrinti produktų sąrašą. ");
-        System.out.println("4. Perkelti produktą į lentyną.");
+        System.out.println("4. Perkelti produktą į lentynąTXT.");
+        System.out.println("5. Patikrinti lentynosTXT sąrašą.");
+        System.out.println("6. Isidėti produktą į krepšelį.");
+        System.out.println("7. Patikrinti prekių krepšelį.");
 
         switch (sc.nextInt()) {
             case 1:
@@ -106,29 +116,74 @@ public class IOManager {
                 System.out.println();
                 CSVImportExportImpl(produktaiList);
             case 4:
-                System.out.println("Pasirinkite produktą kurį norite perkelti į lentyną: ");
+                System.out.println("Pasirinkite produktą kurį norite perkelti į lentynąTXT: ");
                 i = 1;
                 for (Produktas a : produktaiList) {
                     System.out.println(i + ". Produkto ID: " + a);
                     i++;
-                }for(Produktas a : produktaiList)
-                if(a instanceof Vaisius)
-                    try{
-                        int pasirinkimas = sc.nextInt();
-                        bw.append(String.format(String.valueOf(produktaiList.get(pasirinkimas-1))));
-                        bw.close();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-            }
-
-
-
+                }
+                try {
+                    int pasirinkimas = sc.nextInt();
+                    bw.write(produktaiList.get(pasirinkimas - 1).toCSV());
+                    bw.newLine();
+                    bw.flush();
+                    produktaiList.remove(pasirinkimas - 1);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
                 System.out.println("Produktas sėkmingai perkeltas į lentyną.");
                 CSVImportExportImpl(produktaiList);
+            case 5:
+                System.out.println("Šiuo metu lentynojeTXT yra šie produktai: ");
+                String line;
+                while ((line = br.readLine()) != null) {
+                    System.out.println(line);
+                    String[] lineValues = line.split(",");
+                    lineValues = lineValues;
+                }
+                System.out.println();
+                CSVImportExportImpl(produktaiList);
+            case 6:
+                spargalke = new ArrayList<>();
+                System.out.println("Pasirinkite produkto ID kurį norite isidėti į krepšelį: ");
+                while ((line = br.readLine()) != null) {
+                    System.out.println("Produkto ID: " + line);
+                    String[] lineValues = line.split(",");
+                    if (lineValues[4].equalsIgnoreCase("true") || lineValues[4].equalsIgnoreCase("false")) {
+
+                        spargalke.add(new Vaisius(Integer.parseInt(lineValues[0]), String.valueOf(lineValues[1]), Double.parseDouble(lineValues[2]), LocalDate.parse(lineValues[3]), Boolean.parseBoolean(lineValues[4])));
+                    } else {
+                        spargalke.add(new Mėsa(Integer.parseInt(lineValues[0]), String.valueOf(lineValues[1]), Double.parseDouble(lineValues[2]), LocalDate.parse(lineValues[3]), lineValues[4]));
+                    }
+                }
+                int pasirinkimas = sc.nextInt();
+
+                krepselis.add(spargalke.get(pasirinkimas - 1));  // issikelti objekta pagal ID priskirti jy kintamajam
+                System.out.println();
+                CSVImportExportImpl(produktaiList);
+            case 7:
+                System.out.println("Jūsų pirkinių krepšelyje esantys produktai: ");
+                i = 1;
+                double suma = 0;
+                BigDecimal bd = null;
+                for (Produktas a : krepselis) {
+                    System.out.println(i + ". Produkto ID: " + a);
+                    i++;
+                    suma += a.getKaina();
+                    bd = BigDecimal.valueOf(a.getKaina());
+                    bd = bd.setScale(2, RoundingMode.UP);
+                    bd = BigDecimal.valueOf(suma);
+                }
+                System.out.println();
+                System.out.println("Bendra pirkinių suma: " + bd + "Eur. ");
 
         }
+        System.out.println();
+        CSVImportExportImpl(produktaiList);
+
     }
+}
+
 
 
 

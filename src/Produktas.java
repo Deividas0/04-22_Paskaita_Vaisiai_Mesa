@@ -6,6 +6,7 @@ public class Produktas {
     double kaina;
     LocalDate galiojimoData;
 
+
     public void produktas(int prekesKodas, String pavadinimas, double kaina, LocalDate galiojimoData){
         this.prekesKodas = prekesKodas;
         this.pavadinimas = pavadinimas;
@@ -29,5 +30,11 @@ public class Produktas {
     @Override
     public String toString(){
         return getPrekesKodas() + " " + getPavadinimas() + " " + getKaina() + " " + getGaliojimoData();
+    }
+    public String toCSV(){
+        return getPrekesKodas() + "," + getPavadinimas() + "," + getKaina() + "," + getGaliojimoData() + ",";
+    }
+    public Double krepselioSuma(){
+        return getKaina() + getKaina();
     }
 }

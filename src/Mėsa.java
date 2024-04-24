@@ -17,6 +17,7 @@ public class Mėsa extends Produktas{
     public String toString(){
         return getPrekesKodas() + " " + getPavadinimas() + " " + getKaina() + " " + getGaliojimoData() + " " + rusis;
     }
+    @Override
     public String toCSV(){
         return getPrekesKodas() + "," + getPavadinimas() + "," + getKaina() + "," + getGaliojimoData() + "," + rusis;
     }

@@ -19,7 +19,7 @@ public class Vaisius extends Produktas{
     public String toString(){
         return getPrekesKodas() + " " + getPavadinimas() + " " + getKaina() + " " + getGaliojimoData() + " " + arEkologiskas;
     }
-
+    @Override
     public String toCSV(){
         return getPrekesKodas() + "," + getPavadinimas() + "," + getKaina() + "," + getGaliojimoData() + "," + arEkologiskas;
     }
