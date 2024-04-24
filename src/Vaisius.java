@@ -10,14 +10,17 @@ public class Vaisius extends Produktas{
         this.galiojimoData = galiojimoData;
         this.arEkologiskas = arEkologiskas;
     }
-    public boolean isArEkologiskas() {return arEkologiskas;}
+
+
+    public boolean getArEkologiskas() {return arEkologiskas;}
     public void setArEkologiskas(boolean arEkologiskas) {this.arEkologiskas = arEkologiskas;}
 
     @Override
     public String toString(){
         return getPrekesKodas() + " " + getPavadinimas() + " " + getKaina() + " " + getGaliojimoData() + " " + arEkologiskas;
     }
-    private String toCSV(){
+
+    public String toCSV(){
         return getPrekesKodas() + "," + getPavadinimas() + "," + getKaina() + "," + getGaliojimoData() + "," + arEkologiskas;
     }
 }

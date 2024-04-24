@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -8,8 +6,14 @@ import java.util.List;
 import java.util.Scanner;
 
 public class IOManager {
-    //Produktas produktas = new Produktas();
+    Produktas produktas = new Produktas();
     CSVImportExportImpl CSVimpl = new CSVImportExportImpl();
+    public String path = "C:/MokymoDarbai/Produktai.txt";
+    BufferedWriter bw = new BufferedWriter(new FileWriter(path));
+    BufferedReader br = new BufferedReader(new FileReader(path));
+
+    public IOManager() throws IOException {
+    }
 
 
     public void CSVImportExportImpl(List<Produktas> produktaiList) {
@@ -18,6 +22,7 @@ public class IOManager {
         System.out.println("1. Pridėti produktą prie sąrašo. ");
         System.out.println("2. Pašalinti produktą iš sąrašo. ");
         System.out.println("3. Patikrinti produktų sąrašą. ");
+        System.out.println("4. Perkelti produktą į lentyną.");
 
         switch (sc.nextInt()) {
             case 1:
@@ -100,9 +105,31 @@ public class IOManager {
 
                 System.out.println();
                 CSVImportExportImpl(produktaiList);
+            case 4:
+                System.out.println("Pasirinkite produktą kurį norite perkelti į lentyną: ");
+                i = 1;
+                for (Produktas a : produktaiList) {
+                    System.out.println(i + ". Produkto ID: " + a);
+                    i++;
+                }for(Produktas a : produktaiList)
+                if(a instanceof Vaisius)
+                    try{
+                        int pasirinkimas = sc.nextInt();
+                        bw.append(String.format(String.valueOf(produktaiList.get(pasirinkimas-1))));
+                        bw.close();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+            }
+
+
+
+                System.out.println("Produktas sėkmingai perkeltas į lentyną.");
+                CSVImportExportImpl(produktaiList);
+
         }
-
-
     }
 
-}
+
+
+
